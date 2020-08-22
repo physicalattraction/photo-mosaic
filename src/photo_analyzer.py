@@ -1,25 +1,33 @@
 import os.path
-from statistics import mean
+from typing import Dict, Optional
 
-from PIL import Image
-
+from photo import Photo
 from type_hinting import Color
 
 
 class PhotoAnalyzer:
     """
-    Class responsible for determining the average color of a photo
+    Class responsible for determining which photo to pick to create a mosaic, based on average color
     """
 
-    @staticmethod
-    def determine_avg_color(img: Image.Image) -> Color:
-        """
-        Determine the average color of a photo
+    _photos: Optional[Dict[str, Photo]]
 
-        :param img: Image to analyze
-        :return: Three-tuple of the RGB value of the average color
+    def __init__(self, src_dir: str):
+        self.src_dir = src_dir
+        self._photos = None
+
+    @property
+    def photos(self) -> Dict[str, Photo]:
+        if not self._photos:
+            self._photos = {
+                filename: Photo(filepath=os.path.join(self.src_dir, filename))
+                for filename in sorted(os.listdir(self.src_dir))
+            }
+        return self._photos
+
+    def select_best_photo(self, color: Color) -> Photo:
+        """
+        Select the photo that most closely matches the input color
         """
 
-        pixels = list(img.getdata())
-        return tuple(int(round(mean([pixel[channel] for pixel in pixels])))
-                     for channel in (0, 1, 2))
+        return NotImplemented()

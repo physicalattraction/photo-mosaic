@@ -2,8 +2,7 @@ from typing import List, Tuple
 
 from PIL import Image
 
-from photo_analyzer import PhotoAnalyzer
-from utils import get_photo
+from photo import Photo
 
 
 class MosaicCreator:
@@ -11,16 +10,16 @@ class MosaicCreator:
     Class responsible for creating a mosaic in the shape of a given photo
     """
 
-    def __init__(self, img: Image.Image):
+    def __init__(self, filepath: str):
         """
-        :param img: The photo to recreate
+        :param filepath: Path to the file with the photo to recreate
         """
 
-        self.img = img
-        self.pixels = list(img.getdata())
-        self.width, self.height = img.size
+        self.photo = Photo(filepath=filepath)
+        self.pixels = list(self.photo.getdata())
+        self.width, self.height = self.photo.size
 
-    def pixelate(self, nr_pixels_in_x: int, nr_pixels_in_y: int) -> Image.Image:
+    def pixelate(self, nr_pixels_in_x: int, nr_pixels_in_y: int) -> Photo:
         """
         Pixelate the given photo by chopping it up in rectangles, and replace every square by its average color
         """
@@ -31,11 +30,10 @@ class MosaicCreator:
         for x in x_borders:
             for y in y_borders:
                 box = (x[0], y[0], x[1], y[1])
-                sub_img = self.img.crop(box)
-                avg_color = PhotoAnalyzer.determine_avg_color(sub_img)
-                colored_box = Image.new(mode='RGB', size=sub_img.size, color=avg_color)
+                sub_img = Photo(img=self.photo.crop(box))
+                colored_box = Image.new(mode='RGB', size=sub_img.size, color=sub_img.avg_color)
                 result.paste(colored_box, box=box)
-        return result
+        return Photo(img=result)
 
     @staticmethod
     def _determine_box_borders(total_nr_pixels: int, nr_boxes: int) -> List[Tuple[int, int]]:
@@ -54,8 +52,3 @@ class MosaicCreator:
             (int(round(nr_pixels_per_box * index)), int(round(nr_pixels_per_box * (index + 1))))
             for index in range(nr_boxes)
         ]
-
-
-if __name__ == '__main__':
-    mc = MosaicCreator(get_photo('wolf'))
-    mc.pixelate(50, 35)

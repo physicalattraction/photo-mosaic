@@ -1,3 +1,3 @@
-from collections import namedtuple
+from typing import Tuple
 
-Color = namedtuple('Color', ['red', 'green', 'blue'])
+Color = Tuple[int]  # Three-tuples: RGB
