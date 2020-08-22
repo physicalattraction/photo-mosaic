@@ -12,7 +12,7 @@ class PhotoAnalyzer:
     """
 
     @staticmethod
-    def determine_avg_color(img: Image) -> Color:
+    def determine_avg_color(img: Image.Image) -> Color:
         """
         Determine the average color of a photo
 

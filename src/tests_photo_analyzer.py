@@ -4,7 +4,7 @@ from unittest import TestCase
 from PIL import Image
 
 from photo_analyzer import PhotoAnalyzer
-from utils import Dir
+from utils import get_photo
 
 
 class PhotoAnalyzerTestCase(TestCase):
@@ -27,7 +27,6 @@ class PhotoAnalyzerTestCase(TestCase):
         self.assertTupleEqual(expected_avg_color, avg_color)
 
     def test_that_photo_returns_correct_color(self):
-        img = Image.open(os.path.join(Dir.testdata, 'wolf.jpg'))
-        avg_color = PhotoAnalyzer.determine_avg_color(img)
+        avg_color = PhotoAnalyzer.determine_avg_color(get_photo('wolf'))
         expected_avg_color = (126, 109, 100)
         self.assertTupleEqual(expected_avg_color, avg_color)
