@@ -16,7 +16,7 @@ class MosaicCreatorTestCase(TestCase):
     def test_that_pixelate_returns_pixelated_photo(self):
         pixelated_wolf = self.creator.pixelate(nr_pixels_in_x=50, nr_pixels_in_y=35)
         # Expected image is a bitmap, to prevent jpeg artefacts in comparison
-        expected_pixelated_wolf = Photo(filepath=Path.to_photo('wolf_pixelated_50_35.bmp'))
+        expected_pixelated_wolf = Photo.open(Path.to_photo('wolf_pixelated_50_35.bmp'))
         self.assertEqual(expected_pixelated_wolf, pixelated_wolf)
 
     # Private methods

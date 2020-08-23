@@ -1,32 +1,44 @@
 from statistics import mean
-from typing import Optional
+from typing import Any, Optional
 
 from PIL import Image
 
-from type_hinting import Color
+from type_hinting import Color, Size
 
 
 class Photo:
     """
-    Wrapper around Pillow's Image to add functionality
+    Wrapper around Pillow's Image class to overwrite and add functionality
     """
 
     _avg_color: Optional[Color] = None
 
-    def __init__(self, *, filepath: str = None, img: Image.Image = None):
+    @staticmethod
+    def new(mode: str, size: Size, color: Color = 0) -> 'Photo':
         """
-        Initialize with either a path to a file, or an Image in memory
+        Create a new photo with the given mode and size
+        """
 
-        :param filepath: Full path to the photo file
+        img = Image.new(mode, size, color)
+        return Photo(img)
+
+    @staticmethod
+    def open(fp: str) -> 'Photo':
+        """
+        Open and identify the given image file as Photo
+        """
+
+        img = Image.open(fp)
+        return Photo(img)
+
+    def __init__(self, img: Image.Image = None):
+        """
+        Initialize with an Image in memory
+
         :param img: Image of the photo
         """
 
-        assert filepath and not img or img and not filepath
-        if filepath:
-            self.img = Image.open(filepath)
-        else:
-            self.img = img
-
+        self.img = img
         self._avg_color = None
 
     @property
@@ -37,11 +49,15 @@ class Photo:
 
         if not self._avg_color:
             pixels = list(self.getdata())
-            self._avg_color = tuple(int(round(mean([pixel[channel] for pixel in pixels])))
-                                    for channel in (0, 1, 2))
+            channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
+            self._avg_color = (
+                int(round(mean(channels[0]))),  # R mean
+                int(round(mean(channels[1]))),  # G mean
+                int(round(mean(channels[2]))),  # B mean
+            )
         return self._avg_color
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: Any) -> Any:
         """
         To mimic inheritance, any attribute on Photo that cannot be found in this class is redirected to the Image
         associated with this Photo object. Magic methods are not propagated to self.img using __getattr__,
@@ -50,7 +66,7 @@ class Photo:
 
         return getattr(self.img, item)
 
-    def __eq__(self, other: 'Photo'):
+    def __eq__(self, other: 'Photo') -> bool:
         """
         A less strict comparison than in Image to see if two photos are equal, to avoid checking metadata
         """
@@ -76,7 +92,7 @@ class Photo:
 
         return self.img.close()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         A less comprehensive, more readable representation than in Image of the Photo
         """

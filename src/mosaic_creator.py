@@ -3,6 +3,7 @@ from typing import List, Tuple
 from PIL import Image
 
 from photo import Photo
+from type_hinting import Color
 
 
 class MosaicCreator:
@@ -10,12 +11,17 @@ class MosaicCreator:
     Class responsible for creating a mosaic in the shape of a given photo
     """
 
+    photo: Photo
+    pixels: List[Color]
+    width: int
+    height: int
+
     def __init__(self, filepath: str):
         """
         :param filepath: Path to the file with the photo to recreate
         """
 
-        self.photo = Photo(filepath=filepath)
+        self.photo = Photo.open(filepath)
         self.pixels = list(self.photo.getdata())
         self.width, self.height = self.photo.size
 
@@ -24,16 +30,16 @@ class MosaicCreator:
         Pixelate the given photo by chopping it up in rectangles, and replace every square by its average color
         """
 
-        result = Image.new(mode='RGB', size=(self.width, self.height))
+        result = Photo.new(mode='RGB', size=(self.width, self.height))
         x_borders = self._determine_box_borders(self.width, nr_pixels_in_x)
         y_borders = self._determine_box_borders(self.height, nr_pixels_in_y)
         for x in x_borders:
             for y in y_borders:
                 box = (x[0], y[0], x[1], y[1])
-                sub_img = Photo(img=self.photo.crop(box))
+                sub_img = Photo(self.photo.crop(box))
                 colored_box = Image.new(mode='RGB', size=sub_img.size, color=sub_img.avg_color)
                 result.paste(colored_box, box=box)
-        return Photo(img=result)
+        return result
 
     @staticmethod
     def _determine_box_borders(total_nr_pixels: int, nr_boxes: int) -> List[Tuple[int, int]]:

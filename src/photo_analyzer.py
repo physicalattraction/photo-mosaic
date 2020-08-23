@@ -20,7 +20,7 @@ class PhotoAnalyzer:
     def photos(self) -> Dict[str, Photo]:
         if not self._photos:
             self._photos = {
-                filename: Photo(filepath=os.path.join(self.src_dir, filename))
+                filename: Photo.open(os.path.join(self.src_dir, filename))
                 for filename in sorted(os.listdir(self.src_dir))
             }
         return self._photos

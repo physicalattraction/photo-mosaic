@@ -1,3 +1,4 @@
 from typing import Tuple
 
-Color = Tuple[int]  # Three-tuples: RGB
+Color = Tuple[int, int, int]  # Three-tuple: RGB
+Size = Tuple[int, int]  # Two-tuple: width, height
