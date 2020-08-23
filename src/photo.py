@@ -59,9 +59,9 @@ class Photo:
         nr_pixels = len(pixels)
         channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
         return (
-            int(round(sum(channels[0])/nr_pixels)),  # R mean
-            int(round(sum(channels[1])/nr_pixels)),  # G mean
-            int(round(sum(channels[2])/nr_pixels)),  # B mean
+            round(sum(channels[0])/nr_pixels),  # R mean
+            round(sum(channels[1])/nr_pixels),  # G mean
+            round(sum(channels[2])/nr_pixels),  # B mean
         )
 
     def __getattr__(self, item: Any) -> Any:

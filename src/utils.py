@@ -1,4 +1,17 @@
 import os.path
+import random
+from typing import List, Tuple
+
+
+def permutation_multiple_lists(*args: List) -> List[Tuple]:
+    """
+    Return a list of tuples, where each element of the list contains an element from
+    each input list with the same, randomized, index.
+    """
+
+    zipped = list(zip(*args))
+    permutation = random.sample(zipped, len(zipped))
+    return list(permutation)
 
 
 class Path:
