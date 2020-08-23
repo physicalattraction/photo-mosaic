@@ -1,3 +1,4 @@
+import os.path
 import random
 from unittest import TestCase
 
@@ -7,6 +8,8 @@ from utils import Path
 
 
 class MosaicCreatorTestCase(TestCase):
+    RESET_EXPECTED_OUTPUT = False
+
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
@@ -16,8 +19,21 @@ class MosaicCreatorTestCase(TestCase):
 
     def test_that_pixelate_returns_pixelated_photo(self):
         pixelated_wolf = self.creator.pixelate(nr_pixels_in_x=50, nr_pixels_in_y=35)
+        output_file = Path.to_photo('wolf_pixelated_50_35.bmp')
+        if self.RESET_EXPECTED_OUTPUT:
+            pixelated_wolf.save(output_file)
         # Expected image is a bitmap, to prevent jpeg artefacts in comparison
-        expected_pixelated_wolf = Photo.open(Path.to_photo('wolf_pixelated_50_35.bmp'))
+        expected_pixelated_wolf = Photo.open(output_file)
+        self.assertEqual(expected_pixelated_wolf, pixelated_wolf)
+
+    def test_that_photo_pixelate_returns_photo_pixelated_photo(self):
+        pixelated_wolf = self.creator.photo_pixelate(src_dir=os.path.join(Path.testdata, 'cats'),
+                                                     nr_pixels_in_x=30, nr_pixels_in_y=30)
+        output_file = Path.to_photo('wolf_photo_pixelated_30_30.bmp')
+        if self.RESET_EXPECTED_OUTPUT:
+            pixelated_wolf.save(output_file)
+        # Expected image is a bitmap, to prevent jpeg artefacts in comparison
+        expected_pixelated_wolf = Photo.open(output_file)
         self.assertEqual(expected_pixelated_wolf, pixelated_wolf)
 
     # Private methods

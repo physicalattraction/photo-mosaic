@@ -50,7 +50,7 @@ class MosaicCreator:
         analyzer = PhotoAnalyzer(src_dir, nr_photo_pixels=nr_pixels_in_x * nr_pixels_in_y)
         for box in boxes:
             sub_img = Photo(self.photo.crop(box))
-            best_photo = analyzer.select_best_photo(sub_img.avg_color).resize(sub_img.size)
+            best_photo = analyzer.select_best_photo(sub_img.avg_color, desired_size=sub_img.size)
             best_photo = best_photo.convert('RGBA')
             colored_box = Image.new(mode='RGB', size=sub_img.size, color=sub_img.avg_color)
             mask = Image.new(mode='RGBA', size=sub_img.size, color=(0, 0, 0, 100))

@@ -1,4 +1,3 @@
-from statistics import mean
 from typing import Any, Optional
 
 from PIL import Image
@@ -48,16 +47,22 @@ class Photo:
         """
 
         if not self._avg_color:
-            # TODO: Somehow, while in the algorythm, we enter this block of code too many times,
-            #       making the algorythm very slow. I need to figure out why and fix it.
-            pixels = list(self.getdata())
-            channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
-            self._avg_color = (
-                int(round(mean(channels[0]))),  # R mean
-                int(round(mean(channels[1]))),  # G mean
-                int(round(mean(channels[2]))),  # B mean
-            )
+            self._avg_color = self._determine_avg_color()
         return self._avg_color
+
+    def _determine_avg_color(self) -> Color:
+        """
+        Determine the average color of the Photo
+        """
+
+        pixels = list(self.getdata())
+        nr_pixels = len(pixels)
+        channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
+        return (
+            int(round(sum(channels[0])/nr_pixels)),  # R mean
+            int(round(sum(channels[1])/nr_pixels)),  # G mean
+            int(round(sum(channels[2])/nr_pixels)),  # B mean
+        )
 
     def __getattr__(self, item: Any) -> Any:
         """

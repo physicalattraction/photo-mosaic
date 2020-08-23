@@ -39,9 +39,9 @@ class PhotoTestCase(TestCase):
         avg_color = photo.avg_color
         self.assertIsNotNone(photo._avg_color)
         self.assertTupleEqual(avg_color, photo._avg_color)
-        with patch('photo.mean') as mock_mean:
+        with patch.object(Photo, '_determine_avg_color') as mock:
             _ = photo.avg_color
-            mock_mean.assert_not_called()
+            mock.assert_not_called()
 
     def test_that_two_photos_are_not_equal_if_not_equal_in_size(self):
         photo_1 = Photo.new(size=(10, 10), color=(0, 0, 0), mode='RGB')
