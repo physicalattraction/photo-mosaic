@@ -21,3 +21,11 @@ class Path:
         if not ext:
             name = f'{base}.jpg'
         return os.path.join(Path.testdata, name)
+
+    @staticmethod
+    def to_src_dir(name: str) -> str:
+        """
+        Return full path to the directory with photos to generate a mosaic from
+        """
+
+        return os.path.join(Path.photos, name)

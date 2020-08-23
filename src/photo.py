@@ -48,6 +48,8 @@ class Photo:
         """
 
         if not self._avg_color:
+            # TODO: Somehow, while in the algorythm, we enter this block of code too many times,
+            #       making the algorythm very slow. I need to figure out why and fix it.
             pixels = list(self.getdata())
             channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
             self._avg_color = (
