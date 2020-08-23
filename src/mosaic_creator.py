@@ -1,9 +1,10 @@
+import random
 from typing import List, Tuple
 
 from PIL import Image
 
 from photo import Photo
-from type_hinting import Color
+from type_hinting import Box, Color
 
 
 class MosaicCreator:
@@ -31,15 +32,26 @@ class MosaicCreator:
         """
 
         result = Photo.new(mode='RGB', size=(self.width, self.height))
+        for box in self._determine_boxes(nr_pixels_in_x, nr_pixels_in_y):
+            sub_img = Photo(self.photo.crop(box))
+            colored_box = Image.new(mode='RGB', size=sub_img.size, color=sub_img.avg_color)
+            result.paste(colored_box, box=box)
+        return result
+
+    def _determine_boxes(self, nr_pixels_in_x: int, nr_pixels_in_y: int) -> List[Box]:
+        """
+        Return a list of boxes representing the pixels, in a random order
+        """
+
+        boxes = []
         x_borders = self._determine_box_borders(self.width, nr_pixels_in_x)
         y_borders = self._determine_box_borders(self.height, nr_pixels_in_y)
         for x in x_borders:
             for y in y_borders:
                 box = (x[0], y[0], x[1], y[1])
-                sub_img = Photo(self.photo.crop(box))
-                colored_box = Image.new(mode='RGB', size=sub_img.size, color=sub_img.avg_color)
-                result.paste(colored_box, box=box)
-        return result
+                boxes.append(box)
+
+        return random.sample(boxes, len(boxes))
 
     @staticmethod
     def _determine_box_borders(total_nr_pixels: int, nr_boxes: int) -> List[Tuple[int, int]]:

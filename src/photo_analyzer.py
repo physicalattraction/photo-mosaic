@@ -1,3 +1,4 @@
+import math
 import os.path
 from typing import Dict, Optional
 
@@ -31,3 +32,16 @@ class PhotoAnalyzer:
         """
 
         return NotImplemented()
+
+    @staticmethod
+    def _distance(color_1: Color, color_2: Color) -> float:
+        """
+        Return the distance between two colors
+
+        The distance is defined as the square of the 2-norm. Rationale: the s-norm penalizes
+        large differences in a single channel, which for human eyes are less alike.
+        Example: (128, 128, 128) looks more like (127, 127, 127) than (130, 127, 127) does.
+        """
+
+        quadratic_errors = (math.pow((color_1[index] - color_2[index]), 2) for index in range(3))
+        return math.sqrt(sum(quadratic_errors))
