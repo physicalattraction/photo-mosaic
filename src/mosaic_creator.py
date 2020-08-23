@@ -112,6 +112,7 @@ class MosaicCreator:
 
 
 if __name__ == '__main__':
-    c = MosaicCreator(Path.to_photo('wolf_high_res'))
+    c = MosaicCreator(Path.to_photo('wolf_high_res'), max_output_size=774)
     img = c.photo_pixelate(Path.to_src_dir('cats'), nr_pixels_in_x=40, nr_pixels_in_y=40)
     img.show()
+    img.save('wolf_photo_pixelated.jpg')
