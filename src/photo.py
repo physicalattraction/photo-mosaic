@@ -4,6 +4,7 @@ from PIL import Image
 
 from type_hinting import Color, Size
 
+count = 0
 
 class Photo:
     """
@@ -55,13 +56,16 @@ class Photo:
         Determine the average color of the Photo
         """
 
+        global count
+        count += 1
+        print(f'Calculating avg color {count}')
         pixels = list(self.getdata())
         nr_pixels = len(pixels)
         channels = list(zip(*pixels))  # [(R values), (G values), (B values)]
         return (
-            round(sum(channels[0])/nr_pixels),  # R mean
-            round(sum(channels[1])/nr_pixels),  # G mean
-            round(sum(channels[2])/nr_pixels),  # B mean
+            round(sum(channels[0]) / nr_pixels),  # R mean
+            round(sum(channels[1]) / nr_pixels),  # G mean
+            round(sum(channels[2]) / nr_pixels),  # B mean
         )
 
     def __getattr__(self, item: Any) -> Any:

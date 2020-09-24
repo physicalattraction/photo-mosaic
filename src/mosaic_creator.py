@@ -14,21 +14,29 @@ class MosaicCreator:
     """
 
     DEFAULT_MAX_OUTPUT_SIZE = 4000  # The maximum width or height of the output photo
+    DEFAULT_CHEAT_PARAMETER = 150
 
     original_photo: Photo  # The photo to create a mosaic of
     original_size: Size  # The size of the original photo
     pixels: List[Color]  # The pixel data of the original photo
     output_size: Size  # The size of the output mosaic
 
-    def __init__(self, filepath: str, max_output_size: int = DEFAULT_MAX_OUTPUT_SIZE):
+    def __init__(self, filepath: str, max_output_size: int = DEFAULT_MAX_OUTPUT_SIZE,
+                 cheat_parameter: int = DEFAULT_CHEAT_PARAMETER):
         """
         :param filepath: Path to the file with the photo to recreate
+        :param max_output_size: Maximum width or height of the output image
+        :param cheat_parameter: Value between 0 (no cheat) and 255 (full cheat)
+                                to additionally color the photos in the original pixel's color
         """
+
+        assert 0 <= cheat_parameter <= 255
 
         self.original_photo = Photo.open(filepath)
         self.original_size = self.original_photo.size
         self.pixels = list(self.original_photo.getdata())
         self.max_output_size = max_output_size
+        self.cheat_parameter = cheat_parameter
         self.output_size = self._determine_output_size()
 
     def pixelate(self, nr_pixels_in_x: int, nr_pixels_in_y: int) -> Photo:
@@ -36,8 +44,17 @@ class MosaicCreator:
         Pixelate the given photo by chopping it up in rectangles, and replace every square by its average color
         """
 
+        # TODO: Instead of calculating the average color of a box, resize the source image
+        #       to the amount of pixels you need, then this resizing takes care of calculating
+        #       the average color. The result is not identical, but you can't say with the
+        #       human eye which one is better. We now do resize the original photo, but we
+        #       didn't remove the calculation yet and just take the one pixel value.
+        self.original_size = (nr_pixels_in_x, nr_pixels_in_y)
+        self.original_photo = self.original_photo.resize(self.original_size)
+
         result = Photo.new(mode='RGB', size=self.output_size)
         for original_box, output_box in self._get_boxes(nr_pixels_in_x, nr_pixels_in_y):
+            print(original_box)
             sub_img = Photo(self.original_photo.crop(original_box))
             output_img_size = (output_box[2] - output_box[0], output_box[3] - output_box[1])
             colored_box = Image.new(mode='RGB', size=output_img_size, color=sub_img.avg_color)
@@ -53,11 +70,11 @@ class MosaicCreator:
         analyzer = PhotoAnalyzer(src_dir, nr_photo_pixels=nr_pixels_in_x * nr_pixels_in_y)
         for original_box, output_box in self._get_boxes(nr_pixels_in_x, nr_pixels_in_y):
             sub_img = Photo(self.original_photo.crop(original_box))
-            output_img_size = (output_box[2]-output_box[0], output_box[3] - output_box[1])
+            output_img_size = (output_box[2] - output_box[0], output_box[3] - output_box[1])
             best_photo = analyzer.select_best_photo(sub_img.avg_color, desired_size=output_img_size)
             best_photo = best_photo.convert('RGBA')
             colored_box = Image.new(mode='RGB', size=best_photo.size, color=sub_img.avg_color)
-            mask = Image.new(mode='RGBA', size=best_photo.size, color=(0, 0, 0, 100))
+            mask = Image.new(mode='RGBA', size=best_photo.size, color=(0, 0, 0, cheat_parameter))
             best_photo.paste(colored_box, mask=mask)
             result.paste(best_photo, box=output_box)
         return result
@@ -112,7 +129,11 @@ class MosaicCreator:
 
 
 if __name__ == '__main__':
-    c = MosaicCreator(Path.to_photo('wolf_high_res'), max_output_size=774)
-    img = c.photo_pixelate(Path.to_src_dir('cats'), nr_pixels_in_x=40, nr_pixels_in_y=40)
+    max_output_size = 19440
+    cheat_parameter = 125
+    c = MosaicCreator(Path.to_photo('limburg'), max_output_size=max_output_size, cheat_parameter=cheat_parameter)
+    # img = c.pixelate(nr_pixels_in_x=18, nr_pixels_in_y=24)
+    # TODO: Write a method that calculates this desired ratio automatically, instead of using Excel like I did now.
+    img = c.photo_pixelate(Path.to_src_dir('limburg'), nr_pixels_in_x=72, nr_pixels_in_y=96)
     img.show()
-    img.save('wolf_photo_pixelated.jpg')
+    img.save(Path.to_photo(f'limburg_photo_pixelated_{max_output_size}_{cheat_parameter}'))

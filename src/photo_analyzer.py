@@ -1,6 +1,7 @@
-import math
 import os.path
 from typing import Dict, List, Tuple
+
+import math
 
 from photo import Photo
 from type_hinting import Color, Size
@@ -42,7 +43,11 @@ class PhotoAnalyzer:
             self._photos = {
                 filename: Photo.open(os.path.join(self.src_dir, filename))
                 for filename in sorted(os.listdir(self.src_dir))
+                if self._is_image(filename)
             }
+            if not self._photos:
+                msg = f'No photos found in directory {self.src_dir}'
+                raise FileNotFoundError(msg)
         return self._photos
 
     def select_best_photo(self, color: Color, desired_size: Size = None) -> Photo:
@@ -50,9 +55,11 @@ class PhotoAnalyzer:
         Select the photo that most closely matches the input color
         """
 
+        # TODO: I hacked in to determine the average co
+
         unique_photos_to_choose_from = set(self.photos_to_choose_from)
         distances = [
-            (self._distance(color, self.photos[filename].avg_color), filename)
+            (self._distance(color, self._get_resized_photo(filename, desired_size).avg_color), filename)
             for filename in unique_photos_to_choose_from
         ]
         best_photo_filename = min(distances)[1]
@@ -61,6 +68,15 @@ class PhotoAnalyzer:
             return self._get_resized_photo(best_photo_filename, desired_size)
         else:
             return self.photos[best_photo_filename]
+
+    def _is_image(self, filename: str) -> bool:
+        """
+        Return whether the given file is an image or not, based on the extension
+        """
+
+        _, ext = os.path.splitext(filename)
+        image_extensions = {'.jpg', '.jpeg', '.bmp', '.png'}
+        return ext.lower() in image_extensions
 
     def _get_resized_photo(self, filename: str, size: Size) -> Photo:
         """
@@ -72,7 +88,7 @@ class PhotoAnalyzer:
         key = (filename, *size)
         if key not in self._resized_photos:
             photo = self.photos[filename]
-            self._resized_photos[key] = photo.resize(size)
+            self._resized_photos[key] = Photo(img=photo.resize(size))
         return self._resized_photos[key]
 
     @staticmethod

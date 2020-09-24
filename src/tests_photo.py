@@ -30,7 +30,7 @@ class PhotoTestCase(TestCase):
         self.assertTupleEqual(expected_avg_color, photo.avg_color)
 
     def test_that_real_photo_returns_correct_color(self):
-        photo = Photo.open(Path.to_photo('wolf_low_res'))
+        photo = Photo.open(Path.to_testphoto('wolf_low_res'))
         expected_avg_color = (127, 111, 102)
         self.assertTupleEqual(expected_avg_color, photo.avg_color)
 

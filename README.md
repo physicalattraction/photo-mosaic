@@ -27,3 +27,4 @@ python -m mosaic_creator
 - [ ] Add proper error handling
 - [ ] Add an argument parser for input and output to screen/file of choice
 - [ ] Create an example with more source photos
+- [ ] Document how to run a profiler on the algorithm

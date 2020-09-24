@@ -27,6 +27,17 @@ class Path:
     @staticmethod
     def to_photo(name: str) -> str:
         """
+        Return full path to the photo in directory photos
+        """
+
+        base, ext = os.path.splitext(name)
+        if not ext:
+            name = f'{base}.jpg'
+        return os.path.join(Path.photos, name)
+
+    @staticmethod
+    def to_testphoto(name: str) -> str:
+        """
         Return full path to the photo in directory testdata
         """
 

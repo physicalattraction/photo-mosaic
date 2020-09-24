@@ -14,7 +14,7 @@ class MosaicCreatorTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.creator = MosaicCreator(Path.to_photo('wolf_high_res'), max_output_size=500)
+        cls.creator = MosaicCreator(Path.to_testphoto('wolf_high_res'), max_output_size=500)
 
     def test_that_reset_expected_output_is_false(self):
         # Keep this test active to prevent accidentally keeping RESET_EXPECTED_OUTPUT set to True
@@ -24,7 +24,7 @@ class MosaicCreatorTestCase(TestCase):
 
     def test_that_pixelate_returns_pixelated_photo(self):
         pixelated_wolf = self.creator.pixelate(nr_pixels_in_x=50, nr_pixels_in_y=35)
-        output_file = Path.to_photo('wolf_pixelated_50_35.bmp')
+        output_file = Path.to_testphoto('wolf_pixelated_50_35.bmp')
         if self.RESET_EXPECTED_OUTPUT:
             pixelated_wolf.save(output_file)
         # Expected image is a bitmap, to prevent jpeg artefacts in comparison
@@ -35,7 +35,7 @@ class MosaicCreatorTestCase(TestCase):
         random.seed(1)
         pixelated_wolf = self.creator.photo_pixelate(src_dir=os.path.join(Path.testdata, 'cats'),
                                                      nr_pixels_in_x=30, nr_pixels_in_y=30)
-        output_file = Path.to_photo('wolf_photo_pixelated_30_30.bmp')
+        output_file = Path.to_testphoto('wolf_photo_pixelated_30_30.bmp')
         if self.RESET_EXPECTED_OUTPUT:
             pixelated_wolf.save(output_file)
         # Expected image is a bitmap, to prevent jpeg artefacts in comparison
