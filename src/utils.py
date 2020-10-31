@@ -22,12 +22,15 @@ class Path:
     src = os.path.dirname(__file__)
     root = os.path.dirname(src)
     photos = os.path.join(root, 'photos')
+    raw = os.path.join(root, 'raw')
     testdata = os.path.join(root, 'testdata')
 
     @staticmethod
     def to_photo(name: str) -> str:
         """
         Return full path to the photo in directory photos
+
+        :param name: Filename of the photo. Extension is optional, default=.jpg
         """
 
         base, ext = os.path.splitext(name)
@@ -39,6 +42,8 @@ class Path:
     def to_testphoto(name: str) -> str:
         """
         Return full path to the photo in directory testdata
+
+        :param name: Filename of the testphoto. Extension is optional, default=.jpg
         """
 
         base, ext = os.path.splitext(name)
@@ -47,9 +52,21 @@ class Path:
         return os.path.join(Path.testdata, name)
 
     @staticmethod
-    def to_src_dir(name: str) -> str:
+    def to_src_photos_dir(name: str) -> str:
         """
         Return full path to the directory with photos to generate a mosaic from
+
+        :param name: Directory name within the photos directory
         """
 
         return os.path.join(Path.photos, name)
+
+    @staticmethod
+    def to_raw_photos_dir(name: str) -> str:
+        """
+        Return full path to the directory with photos to collect
+
+        :param name: Directory name within the raw directory
+        """
+
+        return os.path.join(Path.raw, name)

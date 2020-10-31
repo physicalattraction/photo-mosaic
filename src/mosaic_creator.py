@@ -1,3 +1,4 @@
+import os.path
 from typing import List, Tuple
 
 from PIL import Image
@@ -129,11 +130,14 @@ class MosaicCreator:
 
 
 if __name__ == '__main__':
-    max_output_size = 19440
-    cheat_parameter = 125
-    c = MosaicCreator(Path.to_photo('limburg'), max_output_size=max_output_size, cheat_parameter=cheat_parameter)
+    max_output_size = 12500
+    cheat_parameter = 50
+    src_photo = 'papmam1'
+    c = MosaicCreator(Path.to_photo(src_photo), max_output_size=max_output_size, cheat_parameter=cheat_parameter)
     # img = c.pixelate(nr_pixels_in_x=18, nr_pixels_in_y=24)
+    src_photos_dir = os.path.join('pap', 'mosaic')
     # TODO: Write a method that calculates this desired ratio automatically, instead of using Excel like I did now.
-    img = c.photo_pixelate(Path.to_src_dir('limburg'), nr_pixels_in_x=72, nr_pixels_in_y=96)
+    # TODO: Combine the Collector and the MosaicCreator to resize images and precalculate and reuse average colors.
+    img = c.photo_pixelate(Path.to_src_photos_dir(src_photos_dir), nr_pixels_in_x=50, nr_pixels_in_y=50)
     img.show()
-    img.save(Path.to_photo(f'limburg_photo_pixelated_{max_output_size}_{cheat_parameter}'))
+    img.save(Path.to_photo(f'{src_photo}_photo_pixelated_{max_output_size}_{cheat_parameter}'))
