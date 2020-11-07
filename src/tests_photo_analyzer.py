@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from photo import Photo
 from photo_analyzer import PhotoAnalyzer
-from utils import Path
+from utils.path import Path
 
 
 class PhotoAnalyzerTestCase(TestCase):

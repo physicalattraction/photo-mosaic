@@ -1,7 +1,7 @@
 import random
 from unittest import TestCase
 
-from utils import permutation_multiple_lists
+from utils.list_utils import permutation_multiple_lists
 
 
 class UtilsTestCase(TestCase):

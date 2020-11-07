@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 import math
 
 from photo import Photo
-from type_hinting import Color, Size
+from utils.type_hinting import Color, Size
 
 
 class PhotoAnalyzer:

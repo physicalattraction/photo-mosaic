@@ -1,17 +1,4 @@
 import os.path
-import random
-from typing import List, Tuple
-
-
-def permutation_multiple_lists(*args: List) -> List[Tuple]:
-    """
-    Return a list of tuples, where each element of the list contains an element from
-    each input list with the same, randomized, index.
-    """
-
-    zipped = list(zip(*args))
-    permutation = random.sample(zipped, len(zipped))
-    return list(permutation)
 
 
 class Path:
@@ -19,11 +6,19 @@ class Path:
     Helper class to build paths within the project
     """
 
-    src = os.path.dirname(__file__)
+    utils = os.path.dirname(__file__)
+    src = os.path.dirname(utils)
     root = os.path.dirname(src)
     photos = os.path.join(root, 'photos')
     raw = os.path.join(root, 'raw')
     testdata = os.path.join(root, 'testdata')
+
+    assert os.path.exists(utils)
+    assert os.path.exists(src)
+    assert os.path.exists(root)
+    assert os.path.exists(photos)
+    assert os.path.exists(raw)
+    assert os.path.exists(testdata)
 
     @staticmethod
     def to_photo(name: str) -> str:
@@ -45,6 +40,8 @@ class Path:
 
         :param name: Filename of the testphoto. Extension is optional, default=.jpg
         """
+
+        # TODO: Replace with mocking to_photo()
 
         base, ext = os.path.splitext(name)
         if not ext:

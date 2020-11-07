@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 from mosaic_creator import MosaicCreator
 from photo import Photo
-from utils import Path
+from utils.path import Path
 
 
 class MosaicCreatorTestCase(TestCase):

@@ -4,7 +4,7 @@ from unittest.mock import patch
 from PIL import Image
 
 from photo import Photo
-from utils import Path
+from utils.path import Path
 
 
 class PhotoTestCase(TestCase):

@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from PIL import Image
 
-from type_hinting import Color, Size
+from utils.type_hinting import Color, Size
 
 count = 0
 

@@ -5,8 +5,9 @@ from PIL import Image
 
 from photo import Photo
 from photo_analyzer import PhotoAnalyzer
-from type_hinting import Box, Color, Size
-from utils import Path, permutation_multiple_lists
+from utils.type_hinting import Box, Color, Size
+from utils.list_utils import permutation_multiple_lists
+from utils.path import Path
 
 
 class MosaicCreator:
