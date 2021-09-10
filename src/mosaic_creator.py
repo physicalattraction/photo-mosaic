@@ -131,8 +131,15 @@ class MosaicCreator:
 
 
 if __name__ == '__main__':
-    max_output_size = 12500
+    c = MosaicCreator(Path.to_photo('wolf_high_res'), max_output_size=774)
     cheat_parameter = 50
+    img = c.photo_pixelate(Path.to_src_photos_dir('cats'), nr_pixels_in_x=40, nr_pixels_in_y=40)
+    img.show()
+    img.save('wolf_photo_pixelated.jpg')
+    import sys
+    sys.exit()
+
+    max_output_size = 12500
     src_photo = 'papmam1'
     c = MosaicCreator(Path.to_photo(src_photo), max_output_size=max_output_size, cheat_parameter=cheat_parameter)
     # img = c.pixelate(nr_pixels_in_x=18, nr_pixels_in_y=24)

@@ -6,6 +6,7 @@ from utils.type_hinting import Color, Size
 
 count = 0
 
+
 class Photo:
     """
     Wrapper around Pillow's Image class to overwrite and add functionality
