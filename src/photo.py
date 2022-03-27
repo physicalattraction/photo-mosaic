@@ -1,10 +1,13 @@
-from typing import Any, Optional
+import os.path
+from typing import Any, Optional, Literal
 
 from PIL import Image
 
 from utils.type_hinting import Color, Size
 
 count = 0
+
+PhotoMode = Literal['1', 'CMYK', 'F', 'HSV', 'I', 'L', 'LAB', 'P', 'RGB', 'RGBA', 'RGBX', 'YCbCr']
 
 
 class Photo:
@@ -15,7 +18,7 @@ class Photo:
     _avg_color: Optional[Color] = None
 
     @staticmethod
-    def new(mode: str, size: Size, color: Color = 0) -> 'Photo':
+    def new(mode: PhotoMode, size: Size, color: Color = 0) -> 'Photo':
         """
         Create a new photo with the given mode and size
         """
@@ -27,6 +30,8 @@ class Photo:
     def open(fp: str) -> 'Photo':
         """
         Open and identify the given image file as Photo
+
+        :param fp: full path to the file to open
         """
 
         img = Image.open(fp)
@@ -57,9 +62,7 @@ class Photo:
         Determine the average color of the Photo
         """
 
-        global count
-        count += 1
-        print(f'Calculating avg color {count}')
+        # TODO: Check if resizing to 1 pixel is faster and still gives good results
         pixels = list(self.getdata())
         nr_pixels = len(pixels)
         channels = list(zip(*pixels))  # [(R values), (G values), (B values)]

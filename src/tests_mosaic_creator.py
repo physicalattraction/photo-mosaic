@@ -14,7 +14,8 @@ class MosaicCreatorTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.creator = MosaicCreator(Path.to_testphoto('wolf_high_res'), max_output_size=500)
+        cls.creator = MosaicCreator(Path.to_testphoto('wolf_high_res'), max_output_size=500,
+                                    nr_pixels_in_x=30, nr_pixels_in_y=30)
 
     def test_that_reset_expected_output_is_false(self):
         # Keep this test active to prevent accidentally keeping RESET_EXPECTED_OUTPUT set to True
@@ -33,8 +34,7 @@ class MosaicCreatorTestCase(TestCase):
 
     def test_that_photo_pixelate_returns_photo_pixelated_photo(self):
         random.seed(1)
-        pixelated_wolf = self.creator.photo_pixelate(src_dir=os.path.join(Path.testdata, 'cats'),
-                                                     nr_pixels_in_x=30, nr_pixels_in_y=30)
+        pixelated_wolf = self.creator.photo_pixelate(src_dir=os.path.join(Path.testdata, 'original_input_photos'))
         output_file = Path.to_testphoto('wolf_photo_pixelated_30_30.bmp')
         if self.RESET_EXPECTED_OUTPUT:
             pixelated_wolf.save(output_file)
@@ -49,8 +49,21 @@ class MosaicCreatorTestCase(TestCase):
         mock = Mock(MosaicCreator)
         mock.original_size = (100, 150)
         mock.max_output_size = 400
+        mock.nr_pixels_in_x = 1
+        mock.nr_pixels_in_y = 1
         output_size = MosaicCreator._determine_output_size(mock)
         expected_output_size = (267, 400)
+        self.assertTupleEqual(expected_output_size, output_size)
+
+    def test_that_determine_output_size_returns_multiple_of_nr_pixels_in_x_and_y(self):
+        # Create a mock to circumvent the initialization of a MosaicCreator
+        mock = Mock(MosaicCreator)
+        mock.original_size = (100, 150)
+        mock.max_output_size = 400
+        mock.nr_pixels_in_x = 15
+        mock.nr_pixels_in_y = 9
+        output_size = MosaicCreator._determine_output_size(mock)
+        expected_output_size = (270, 396)
         self.assertTupleEqual(expected_output_size, output_size)
 
     def test_that_determine_boxes_returns_correct_boxes(self):

@@ -8,14 +8,14 @@ from utils.path import Path
 
 class PhotoAnalyzerTestCase(TestCase):
     def test_that_photos_are_properly_initialized(self):
-        cats = os.path.join(Path.testdata, 'cats')
+        cats = os.path.join(Path.testdata, 'original_input_photos')
         analyzer = PhotoAnalyzer(src_dir=cats, nr_photo_pixels=10)
         photos = analyzer.photos
         self.assertListEqual(list(photos.keys()), [f'cat00{index}.jpg' for index in (1, 2, 3, 4, 5)])
         self.assertTrue(all(isinstance(value, Photo) for value in photos.values()))
 
     def test_that_photos_to_choose_from_are_properly_initialized(self):
-        cats = os.path.join(Path.testdata, 'cats')
+        cats = os.path.join(Path.testdata, 'original_input_photos')
         analyzer = PhotoAnalyzer(src_dir=cats, nr_photo_pixels=9)
         photos = analyzer.photos_to_choose_from
         self.assertListEqual(photos, [f'cat00{index}.jpg' for index in (1, 2, 3, 4, 5, 1, 2, 3, 4, 5)])

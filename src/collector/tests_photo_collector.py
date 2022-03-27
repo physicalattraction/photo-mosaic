@@ -112,7 +112,7 @@ class PhotoCollectorTestCase(TestCase):
         cat001 = os.path.join(first_cat, 'cat001.JPG')
         cat003 = os.path.join(cat_odd, 'cat003.JPG')
         cat005 = os.path.join(cat_odd, 'cat005.JPG')
-        src_dir = os.path.join(Path.testdata, 'cats')
+        src_dir = os.path.join(Path.testdata, 'original_input_photos')
         shutil.copyfile(os.path.join(src_dir, 'cat001.jpg'), cat001)
         shutil.copyfile(os.path.join(src_dir, 'cat002.jpg'), cat002)
         shutil.copyfile(os.path.join(src_dir, 'cat003.jpg'), cat003)

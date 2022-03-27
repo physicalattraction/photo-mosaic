@@ -57,7 +57,7 @@ class PhotoCollector:
         Before:
 
         raw/
-            cats/
+            original_input_photos/
                 cat_even/
                     cat002.JPG
                     cat004.JPG
@@ -70,7 +70,7 @@ class PhotoCollector:
         After:
 
         photos/
-            cats/
+            original_input_photos/
                 00000001.jpg
                 00000002.jpg
                 00000003.jpg

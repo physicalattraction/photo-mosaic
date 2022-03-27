@@ -1,7 +1,7 @@
 *
 
 !.gitignore
-!cats
-!cats/*
+!cats_small/original_input_photos
+!cats_small/original_input_photos/*
 !wolf_photo_pixelated.jpg
 !wolf_high_res.jpg
